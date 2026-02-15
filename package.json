@@ -8,6 +8,7 @@
     "build": "nuxt build",
     "deploy": "nuxt build && wrangler pages deploy dist",
     "preview": "nuxt preview",
+    "deploy": "nuxt build && wrangler pages deploy dist",
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
     "worker:dev": "wrangler dev worker/src/index.ts",

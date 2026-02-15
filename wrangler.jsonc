@@ -16,13 +16,31 @@
     "CRYPTO_ADDRESS_ETH": "your-eth-address",
     "CRYPTO_ADDRESS_SOL": "your-sol-address"
   },
+  // R2 Bucket binding
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "streamvault-videos"
+    }
+  ],
+/* 
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "video-stream-service"
+database_id = "e3f84a06-dc7e-4f30-9360-2c61e07b0fa7"
 
+# KV Namespace binding (for caching)
+[[kv_namespaces]]
+binding = "KV_CACHE"
+id = "901eb8e33f8746479e6217257fab0e66"
+ */
   // D1 Database binding
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "streamvault-db",
-      "database_id": "your-database-id-here"
+      "database_name": "video-stream-service",
+      "database_id": "e3f84a06-dc7e-4f30-9360-2c61e07b0fa7"
     }
   ],
 
@@ -38,7 +56,7 @@
   "kv_namespaces": [
     {
       "binding": "KV_CACHE",
-      "id": "your-kv-namespace-id-here"
+      "id": "901eb8e33f8746479e6217257fab0e66"
     }
   ]
 }
