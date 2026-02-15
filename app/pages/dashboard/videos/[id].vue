@@ -194,12 +194,11 @@ const visibilities = [
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm text-[var(--sv-text-secondary)] mb-1.5">Visibility</label>
-              <select
+              <USelect
                 v-model="form.visibility"
-                class="w-full px-3 py-2.5 rounded-lg bg-[var(--sv-bg-tertiary)] border border-[var(--sv-border)] text-white text-sm focus:outline-none focus:border-indigo-500"
-              >
-                <option v-for="v in visibilities" :key="v.value" :value="v.value">{{ v.label }}</option>
-              </select>
+                :items="visibilities.map((v: any) => ({ label: v.label, value: v.value }))"
+                class="w-full"
+              />
             </div>
             <div>
               <label class="block text-sm text-[var(--sv-text-secondary)] mb-1.5">Category</label>

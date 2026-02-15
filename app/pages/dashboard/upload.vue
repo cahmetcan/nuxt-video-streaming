@@ -187,26 +187,20 @@ const visibilities = [
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-[var(--sv-text-secondary)] mb-1.5">Visibility</label>
-            <select
+            <USelect
               v-model="metadata.visibility"
-              class="w-full px-3 py-2.5 rounded-lg bg-[var(--sv-bg-tertiary)] border border-[var(--sv-border)] text-white text-sm focus:outline-none focus:border-indigo-500"
-            >
-              <option v-for="v in visibilities" :key="v.value" :value="v.value">
-                {{ v.label }} - {{ v.description }}
-              </option>
-            </select>
+              :items="visibilities.map((v: any) => ({ label: `${v.label} - ${v.description}`, value: v.value }))"
+              class="w-full"
+            />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-[var(--sv-text-secondary)] mb-1.5">Category</label>
-            <select
+            <USelect
               v-model="metadata.category"
-              class="w-full px-3 py-2.5 rounded-lg bg-[var(--sv-bg-tertiary)] border border-[var(--sv-border)] text-white text-sm focus:outline-none focus:border-indigo-500"
-            >
-              <option v-for="cat in categories" :key="cat" :value="cat">
-                {{ cat || 'Select category' }}
-              </option>
-            </select>
+              :items="categories.map((cat: string) => ({ label: cat || 'Select category', value: cat }))"
+              class="w-full"
+            />
           </div>
         </div>
 
