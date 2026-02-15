@@ -1,22 +1,21 @@
 {
-  // StreamVault Worker Configuration
-  "name": "streamvault-worker",
-  "main": "worker/src/index.ts",
+  // StreamVault - Cloudflare Pages Configuration
+  "name": "streamvault",
+  "pages_build_output_dir": "dist",
   "compatibility_date": "2025-12-01",
   "compatibility_flags": ["nodejs_compat"],
 
   // Environment variables
+  // IMPORTANT: For secrets (JWT_SECRET, API keys), use `wrangler pages secret put` instead of putting them here
   "vars": {
-    "JWT_SECRET": "change-this-in-production"
-  },
+    "NUXT_PUBLIC_APP_URL": "https://stream-server.pages.dev",
 
-  // R2 Bucket binding
-  "r2_buckets": [
-    {
-      "binding": "R2_BUCKET",
-      "bucket_name": "streamvault-videos"
-    }
-  ],
+    // Crypto payment receiving addresses
+    // Replace with your own wallet addresses
+    "CRYPTO_ADDRESS_BTC": "your-btc-address",
+    "CRYPTO_ADDRESS_ETH": "your-eth-address",
+    "CRYPTO_ADDRESS_SOL": "your-sol-address"
+  },
 
   // D1 Database binding
   "d1_databases": [
@@ -27,22 +26,19 @@
     }
   ],
 
+  // R2 Bucket binding (for video storage)
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "streamvault-videos"
+    }
+  ],
+
   // KV Namespace binding (for caching)
   "kv_namespaces": [
     {
       "binding": "KV_CACHE",
       "id": "your-kv-namespace-id-here"
     }
-  ],
-
-  // Development
-  "dev": {
-    "port": 8787,
-    "local_protocol": "http"
-  },
-
-  // Limits
-  "limits": {
-    "cpu_ms": 50
-  }
+  ]
 }
