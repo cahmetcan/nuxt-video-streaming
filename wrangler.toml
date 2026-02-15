@@ -1,0 +1,42 @@
+# StreamVault Worker Configuration
+name = "streamvault-worker"
+main = "worker/src/index.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables
+[vars]
+JWT_SECRET = "change-this-in-production"
+
+# R2 Bucket binding
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "streamvault-videos"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "streamvault-db"
+database_id = "your-database-id-here"
+
+# KV Namespace binding (for caching)
+[[kv_namespaces]]
+binding = "KV_CACHE"
+id = "your-kv-namespace-id-here"
+
+# Worker routes
+# [env.production]
+# routes = [{ pattern = "stream.yourdomain.com/*", zone_name = "yourdomain.com" }]
+
+# Development
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Build configuration
+[build]
+command = ""
+
+# Limits
+[limits]
+cpu_ms = 50
