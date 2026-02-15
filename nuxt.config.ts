@@ -42,21 +42,15 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  // All values come from wrangler.jsonc vars (NUXT_ prefix auto-maps here)
   runtimeConfig: {
-    cfAccountId: process.env.CF_ACCOUNT_ID || '',
-    cfApiToken: process.env.CF_API_TOKEN || '',
-    r2AccessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-    r2SecretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
-    r2Bucket: process.env.R2_BUCKET || 'streamvault-videos',
-    r2Endpoint: process.env.R2_ENDPOINT || '',
-    d1DatabaseId: process.env.D1_DATABASE_ID || '',
-    jwtSecret: process.env.JWT_SECRET || 'streamvault-secret-change-in-production',
-    cryptoPaymentApiKey: process.env.CRYPTO_PAYMENT_API_KEY || '',
-    cryptoWebhookSecret: process.env.CRYPTO_WEBHOOK_SECRET || '',
+    jwtSecret: '',
+    cryptoWebhookSecret: '',
+    cryptoAddressBtc: '',
+    cryptoAddressEth: '',
+    cryptoAddressSol: '',
     public: {
-      appUrl: process.env.APP_URL || 'http://localhost:3000',
-      workerUrl: process.env.WORKER_URL || 'http://localhost:8787',
-      cryptoPaymentPublicKey: process.env.CRYPTO_PAYMENT_PUBLIC_KEY || '',
+      workerUrl: 'http://localhost:8787',
     },
   },
 

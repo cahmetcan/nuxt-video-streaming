@@ -8,11 +8,10 @@
     "build": "nuxt build",
     "deploy": "nuxt build && wrangler pages deploy dist",
     "preview": "nuxt preview",
-    "deploy": "nuxt build && wrangler pages deploy dist",
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
-    "worker:dev": "wrangler dev worker/src/index.ts",
-    "worker:deploy": "wrangler deploy worker/src/index.ts",
+    "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
+    "worker:deploy": "wrangler deploy --config worker/wrangler.jsonc",
     "db:migrate": "wrangler d1 execute streamvault-db --local --file=server/database/migrations.sql",
     "db:migrate:prod": "wrangler d1 execute streamvault-db --remote --file=server/database/migrations.sql",
     "typecheck": "nuxt typecheck"

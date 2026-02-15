@@ -43,10 +43,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const paymentId = generateId()
-
-  // Use configured receiving addresses from wrangler.jsonc vars
-  const cf = (event.context as any).cloudflare
-  const paymentAddress = getPaymentAddress(cf?.env, validCurrency.network, currency)
+  const paymentAddress = getPaymentAddress(validCurrency.network)
 
   // Estimate crypto amount (in production, use a real-time price oracle)
   const cryptoAmount = estimateCryptoAmount(amountUsd, currency)
@@ -74,31 +71,19 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-function getPaymentAddress(env: any, network: string, currency: string): string {
-  // Read receiving addresses from Cloudflare environment vars (configured in wrangler.jsonc)
-  if (env) {
-    switch (network) {
-      case 'bitcoin':
-        if (env.CRYPTO_ADDRESS_BTC) return env.CRYPTO_ADDRESS_BTC
-        break
-      case 'ethereum':
-      case 'polygon':
-        if (env.CRYPTO_ADDRESS_ETH) return env.CRYPTO_ADDRESS_ETH
-        break
-      case 'solana':
-        if (env.CRYPTO_ADDRESS_SOL) return env.CRYPTO_ADDRESS_SOL
-        break
-    }
-  }
-
-  // Fallback: check Nuxt runtime config
+function getPaymentAddress(network: string): string {
   const config = useRuntimeConfig()
-  const addresses = (config as any).cryptoAddresses || {}
-  if (addresses[currency] || addresses[network]) {
-    return addresses[currency] || addresses[network]
+  const addressMap: Record<string, string> = {
+    bitcoin: config.cryptoAddressBtc,
+    ethereum: config.cryptoAddressEth,
+    polygon: config.cryptoAddressEth,
+    solana: config.cryptoAddressSol,
   }
-
-  throw createError({ statusCode: 500, message: 'Payment address not configured for this network' })
+  const address = addressMap[network]
+  if (!address) {
+    throw createError({ statusCode: 500, message: 'Payment address not configured for this network' })
+  }
+  return address
 }
 
 function estimateCryptoAmount(usd: number, currency: string): string {
