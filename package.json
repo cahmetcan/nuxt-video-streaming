@@ -14,7 +14,7 @@
     "worker:dev": "wrangler dev worker/src/index.ts",
     "worker:deploy": "wrangler deploy worker/src/index.ts",
     "db:migrate": "wrangler d1 execute streamvault-db --local --file=server/database/migrations.sql",
-    "db:migrate:prod": "wrangler d1 execute streamvault-db --file=server/database/migrations.sql",
+    "db:migrate:prod": "wrangler d1 execute streamvault-db --remote --file=server/database/migrations.sql",
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {

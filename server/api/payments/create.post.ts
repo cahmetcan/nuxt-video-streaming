@@ -42,10 +42,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Invalid payment type' })
   }
 
-  // Generate a payment address (in production, integrate with a crypto payment processor)
-  // For demonstration, generating a deterministic address based on payment ID
   const paymentId = generateId()
-  const paymentAddress = generatePaymentAddress(validCurrency.network, paymentId)
+
+  // Use configured receiving addresses from wrangler.jsonc vars
+  const cf = (event.context as any).cloudflare
+  const paymentAddress = getPaymentAddress(cf?.env, validCurrency.network, currency)
 
   // Estimate crypto amount (in production, use a real-time price oracle)
   const cryptoAmount = estimateCryptoAmount(amountUsd, currency)
@@ -73,23 +74,31 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-function generatePaymentAddress(network: string, seed: string): string {
-  // In production, this would call a payment processor API (e.g., NOWPayments, CoinGate, BTCPay Server)
-  // For demonstration, generate realistic-looking addresses
-  const chars = '0123456789abcdef'
-  const randomHex = (length: number) => Array.from({ length }, () => chars[Math.floor(Math.random() * 16)]).join('')
-
-  switch (network) {
-    case 'bitcoin':
-      return 'bc1q' + randomHex(38)
-    case 'ethereum':
-    case 'polygon':
-      return '0x' + randomHex(40)
-    case 'solana':
-      return randomHex(44)
-    default:
-      return '0x' + randomHex(40)
+function getPaymentAddress(env: any, network: string, currency: string): string {
+  // Read receiving addresses from Cloudflare environment vars (configured in wrangler.jsonc)
+  if (env) {
+    switch (network) {
+      case 'bitcoin':
+        if (env.CRYPTO_ADDRESS_BTC) return env.CRYPTO_ADDRESS_BTC
+        break
+      case 'ethereum':
+      case 'polygon':
+        if (env.CRYPTO_ADDRESS_ETH) return env.CRYPTO_ADDRESS_ETH
+        break
+      case 'solana':
+        if (env.CRYPTO_ADDRESS_SOL) return env.CRYPTO_ADDRESS_SOL
+        break
+    }
   }
+
+  // Fallback: check Nuxt runtime config
+  const config = useRuntimeConfig()
+  const addresses = (config as any).cryptoAddresses || {}
+  if (addresses[currency] || addresses[network]) {
+    return addresses[currency] || addresses[network]
+  }
+
+  throw createError({ statusCode: 500, message: 'Payment address not configured for this network' })
 }
 
 function estimateCryptoAmount(usd: number, currency: string): string {
