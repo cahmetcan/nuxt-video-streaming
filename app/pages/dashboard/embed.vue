@@ -59,15 +59,11 @@ const hlsExampleCode = computed(() => {
     <!-- Video Selector -->
     <div class="sv-card p-5 mb-6">
       <label class="block text-sm font-medium text-[var(--sv-text-secondary)] mb-2">Select a video</label>
-      <select
+      <USelect
         v-model="selectedVideo"
-        class="w-full px-3 py-2.5 rounded-lg bg-[var(--sv-bg-tertiary)] border border-[var(--sv-border)] text-white text-sm focus:outline-none focus:border-indigo-500"
-      >
-        <option value="">Choose a video...</option>
-        <option v-for="video in videos" :key="video.id" :value="video.id">
-          {{ video.title }}
-        </option>
-      </select>
+        :items="[{ label: 'Choose a video...', value: '' }, ...videos.map((v: any) => ({ label: v.title, value: v.id }))]"
+        class="w-full"
+      />
     </div>
 
     <div v-if="embedData" class="space-y-5">
