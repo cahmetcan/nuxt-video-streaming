@@ -1,23 +1,39 @@
 {
-  "name": "video-streaming-nuxt-hls",
+  "name": "streamvault",
   "version": "1.0.0",
-  "description": "",
-  "author": "Nuxt.js Team",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "MINIMAL=1 CSB=1 nuxt",
+    "dev": "nuxt dev",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "preview": "nuxt preview",
     "generate": "nuxt generate",
-    "post-update": "yarn upgrade --latest"
+    "postinstall": "nuxt prepare",
+    "worker:dev": "wrangler dev worker/src/index.ts",
+    "worker:deploy": "wrangler deploy worker/src/index.ts",
+    "db:migrate": "wrangler d1 execute streamvault-db --local --file=server/database/migrations.sql",
+    "db:migrate:prod": "wrangler d1 execute streamvault-db --file=server/database/migrations.sql",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
-    "@nuxt/http": "^0.5.0",
-    "hls.js": "0.14.11",
-    "nuxt": "2.14.3",
-    "plyr": "3.6.2",
-    "reqlim": "^0.0.0",
-    "vue-plyr": "6.0.4"
+    "@iconify-json/heroicons": "^1.2.1",
+    "@iconify-json/lucide": "^1.2.8",
+    "@nuxt/ui": "^3.0.0",
+    "@vueuse/core": "^11.3.0",
+    "@vueuse/nuxt": "^11.3.0",
+    "hls.js": "^1.5.17",
+    "hono": "^4.6.0",
+    "nuxt": "^3.14.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.4.0",
+    "qrcode": "^1.5.4",
+    "uuid": "^10.0.0"
   },
-  "keywords": []
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "@nuxt/fonts": "^0.10.3",
+    "@nuxtjs/color-mode": "^3.5.2",
+    "typescript": "^5.6.0",
+    "wrangler": "^3.91.0"
+  }
 }
