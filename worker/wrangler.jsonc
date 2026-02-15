@@ -1,19 +1,12 @@
 {
-  // StreamVault - Cloudflare Pages
-  "name": "streamvault",
-  "pages_build_output_dir": "dist",
+  // StreamVault - Standalone Edge Worker (video streaming)
+  "name": "streamvault-worker",
+  "main": "src/index.ts",
   "compatibility_date": "2025-12-01",
   "compatibility_flags": ["nodejs_compat"],
 
   "vars": {
-    "NUXT_PUBLIC_WORKER_URL": "https://streamvault-worker.your-subdomain.workers.dev",
-    "NUXT_JWT_SECRET": "change-this-in-production",
-    "NUXT_CRYPTO_WEBHOOK_SECRET": "",
-
-    // Your crypto wallet addresses for receiving payments
-    "NUXT_CRYPTO_ADDRESS_BTC": "your-btc-address",
-    "NUXT_CRYPTO_ADDRESS_ETH": "your-eth-address",
-    "NUXT_CRYPTO_ADDRESS_SOL": "your-sol-address"
+    "JWT_SECRET": "change-this-in-production"
   },
 
   "d1_databases": [
