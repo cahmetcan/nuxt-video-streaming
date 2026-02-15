@@ -68,13 +68,6 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
-    cloudflare: {
-      pages: {
-        routes: {
-          exclude: ['/api/*'],
-        },
-      },
-    },
   },
 
   devtools: { enabled: false },
