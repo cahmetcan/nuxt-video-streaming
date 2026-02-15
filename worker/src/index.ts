@@ -7,6 +7,16 @@ type Bindings = {
   DB: D1Database
   KV_CACHE: KVNamespace
   JWT_SECRET: string
+  VIDEO_QUEUE: Queue
+}
+
+interface VideoMessage {
+  type: string
+  videoId: string
+  userId: string
+  r2Key: string
+  filename: string
+  fileSize: number
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -441,4 +451,40 @@ async function hashString(str: string): Promise<string> {
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16)
 }
 
-export default app
+export default {
+  fetch: app.fetch,
+
+  // Queue consumer — processes uploaded videos
+  async queue(batch: MessageBatch<VideoMessage>, env: Bindings) {
+    for (const msg of batch.messages) {
+      const { type, videoId, r2Key } = msg.body
+
+      if (type === 'video.uploaded') {
+        try {
+          // Verify the file exists in R2
+          const head = await env.R2_BUCKET.head(r2Key)
+          if (!head) {
+            console.error(`Video file not found in R2: ${r2Key}`)
+            await env.DB.prepare(
+              'UPDATE videos SET status = ?, updated_at = ? WHERE id = ?'
+            ).bind('error', new Date().toISOString(), videoId).run()
+            msg.ack()
+            continue
+          }
+
+          // Mark video as ready
+          await env.DB.prepare(
+            'UPDATE videos SET status = ?, updated_at = ? WHERE id = ?'
+          ).bind('ready', new Date().toISOString(), videoId).run()
+
+          msg.ack()
+        } catch (err) {
+          console.error(`Failed to process video ${videoId}:`, err)
+          msg.retry()
+        }
+      } else {
+        msg.ack()
+      }
+    }
+  },
+}
