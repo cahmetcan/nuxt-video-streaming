@@ -27,5 +27,16 @@
       "binding": "KV_CACHE",
       "id": "901eb8e33f8746479e6217257fab0e66"
     }
-  ]
+  ],
+
+  // Queue consumer — receives video processing jobs from Pages
+  "queues": {
+    "consumers": [
+      {
+        "queue": "streamvault-video-processing",
+        "max_batch_size": 5,
+        "max_batch_timeout": 10
+      }
+    ]
+  }
 }

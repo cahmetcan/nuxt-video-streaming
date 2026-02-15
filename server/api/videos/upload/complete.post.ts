@@ -100,13 +100,23 @@ export default defineEventHandler(async (event) => {
     'UPDATE users SET storage_used_bytes = storage_used_bytes + ? WHERE id = ?'
   ).bind(totalSize, auth.sub).run()
 
-  // Simulate processing completion (in production, this would trigger a Worker)
-  // For now, mark as ready after upload
-  setTimeout(async () => {
+  // Send to Cloudflare Queue for processing
+  const cf = (event.context as any).cloudflare
+  if (cf?.env?.VIDEO_QUEUE) {
+    await cf.env.VIDEO_QUEUE.send({
+      type: 'video.uploaded',
+      videoId: session.video_id,
+      userId: auth.sub,
+      r2Key: finalKey,
+      filename: session.filename,
+      fileSize: totalSize,
+    })
+  } else {
+    // Local dev fallback: mark ready immediately
     await db.prepare(
       'UPDATE videos SET status = ?, updated_at = ? WHERE id = ?'
     ).bind('ready', new Date().toISOString(), session.video_id).run()
-  }, 2000)
+  }
 
   return {
     success: true,
